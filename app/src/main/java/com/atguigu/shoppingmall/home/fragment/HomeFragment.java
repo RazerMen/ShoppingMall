@@ -1,18 +1,25 @@
 package com.atguigu.shoppingmall.home.fragment;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
 import com.atguigu.shoppingmall.R;
 import com.atguigu.shoppingmall.base.BaseFragment;
+import com.atguigu.shoppingmall.home.bean.HomeBean;
+import com.atguigu.shoppingmall.utils.Constants;
+import com.zhy.http.okhttp.OkHttpUtils;
+import com.zhy.http.okhttp.callback.StringCallback;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import okhttp3.Call;
 
 /**
  * Created by 一名程序员 on 2017/2/22.
@@ -44,9 +51,50 @@ public class HomeFragment extends BaseFragment {
     @Override
     public void initData() {
         super.initData();
+        Log.e("TAG", "主页的数据被初始化了...");
+
+        //使用OkHttpUtils请求网络
+        getDataFromNet();
     }
 
-    @OnClick({R.id.tv_search_hom, R.id.tv_message_home, R.id.ib_top,R.id.ll_main_scan})
+    //使用OkHttpUtils请求网络
+    private void getDataFromNet() {
+
+        OkHttpUtils
+                .get()
+                .url(Constants.HOME_URL)
+                .id(100)
+                .build()
+                .execute(new MyStringCallback());
+    }
+
+    class MyStringCallback extends StringCallback {
+
+        @Override
+        public void onError(Call call, Exception e, int id) {
+            Log.e("TAG", "加载失败了==" + e.getMessage());
+        }
+
+        @Override
+        public void onResponse(String response, int id) {
+            Log.e("TAG", "加载成功了==" + response);
+
+            proceessData(response);
+        }
+    }
+
+    /**
+     * 1、三种解析方式：fastjson，Gson，手动解析数据
+     * 2、设置适配器
+     * @param response
+     */
+    private void proceessData(String response) {
+        //使用fastJson解析数据
+        HomeBean homeBean = JSON.parseObject(response,HomeBean.class);
+        Log.e("TAG", "解析数据成功==" + homeBean.getResult().getHot_info().get(0).getName());
+    }
+
+    @OnClick({R.id.tv_search_hom, R.id.tv_message_home, R.id.ib_top, R.id.ll_main_scan})
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.tv_search_hom:
