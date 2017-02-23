@@ -5,6 +5,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -19,6 +21,9 @@ import com.youth.banner.transformer.BackgroundToForegroundTransformer;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by 一名程序员 on 2017/2/23.
@@ -110,7 +115,7 @@ public class HomeAdapter extends RecyclerView.Adapter {
      */
     @Override
     public int getItemCount() {
-        return 1;
+        return 2;
     }
 
     /**
@@ -125,6 +130,8 @@ public class HomeAdapter extends RecyclerView.Adapter {
             return new BannerViewHolder(mContext, inflater.inflate(R.layout.banner_viewpager, null));
 
         } else if (viewType == CHANNEL) {
+
+            return new ChannelViewHolder(mContext, inflater.inflate(R.layout.channel_item, null));
 
         } else if (viewType == ACT) {
 
@@ -148,11 +155,45 @@ public class HomeAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 
         if (getItemViewType(position) == BANNER) {
-            BannerViewHolder viewHolder = (BannerViewHolder) holder;
+            BannerViewHolder bannerViewHolder = (BannerViewHolder) holder;
             //绑定数据
-            viewHolder.setData(result.getBanner_info());
+            bannerViewHolder.setData(result.getBanner_info());
+        } else if (getItemViewType(position) == CHANNEL) {
+            ChannelViewHolder channelViewHoder = (ChannelViewHolder) holder;
+            //绑定数据
+            channelViewHoder.setData(result.getChannel_info());
+        }
+    }
+
+    class ChannelViewHolder extends RecyclerView.ViewHolder {
+
+        private Context mContext;
+
+        ChannelAdapter adapter;
+
+        @BindView(R.id.gv_channel)
+        GridView gvChannel;
+
+        public ChannelViewHolder(Context mContext, View itemView) {
+            super(itemView);
+            ButterKnife.bind(this, itemView);
+            this.mContext = mContext;
         }
 
+        public void setData(List<HomeBean.ResultBean.ChannelInfoBean> channel_info) {
+
+            //设置GridView的适配器
+            adapter = new ChannelAdapter(mContext, channel_info);
+            gvChannel.setAdapter(adapter);
+
+            //设置点击事件
+            gvChannel.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Toast.makeText(mContext, "position==" + position, Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
     }
 
     class BannerViewHolder extends RecyclerView.ViewHolder {
