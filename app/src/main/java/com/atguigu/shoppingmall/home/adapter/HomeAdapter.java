@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.atguigu.shoppingmall.R;
 import com.atguigu.shoppingmall.home.bean.HomeBean;
+import com.atguigu.shoppingmall.home.view.MyGridView;
 import com.atguigu.shoppingmall.utils.Constants;
 import com.bumptech.glide.Glide;
 import com.youth.banner.Banner;
@@ -152,7 +153,7 @@ public class HomeAdapter extends RecyclerView.Adapter {
 
         } else if (viewType == HOT) {
 
-            return new HotViewHolder(mContext,inflater.inflate(R.layout.hot_item,null));
+            return new HotViewHolder(mContext, inflater.inflate(R.layout.hot_item, null));
 
         }
         return null;
@@ -184,19 +185,41 @@ public class HomeAdapter extends RecyclerView.Adapter {
         } else if (getItemViewType(position) == RECOMMEND) {
             RecommendViewHolder recommendViewHolder = (RecommendViewHolder) holder;
             recommendViewHolder.setData(result.getRecommend_info());
-        }else if(getItemViewType(position) == HOT) {
+        } else if (getItemViewType(position) == HOT) {
             HotViewHolder hotViewHolder = (HotViewHolder) holder;
             hotViewHolder.setData(result.getHot_info());
         }
     }
 
-    class HotViewHolder extends RecyclerView.ViewHolder{
+    class HotViewHolder extends RecyclerView.ViewHolder {
+
+        private final Context mContext;
+        @BindView(R.id.tv_more_hot)
+        TextView tvMoreHot;
+        @BindView(R.id.gv_hot)
+        MyGridView gvHot;
+
+        private HotGridViewAdapter hotGridViewAdapter;
 
         public HotViewHolder(Context mContext, View itemView) {
             super(itemView);
+            ButterKnife.bind(this,itemView);
+            this.mContext = mContext;
         }
 
         public void setData(List<HomeBean.ResultBean.HotInfoBean> hot_info) {
+
+            //设置适配器
+            hotGridViewAdapter = new HotGridViewAdapter(mContext,hot_info);
+            gvHot.setAdapter(hotGridViewAdapter);
+
+            //设置监听
+            gvHot.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Toast.makeText(mContext, "position==" + position, Toast.LENGTH_SHORT).show();
+                }
+            });
 
         }
     }
@@ -213,14 +236,14 @@ public class HomeAdapter extends RecyclerView.Adapter {
 
         public RecommendViewHolder(Context mContext, View itemView) {
             super(itemView);
-            ButterKnife.bind(this,itemView);
+            ButterKnife.bind(this, itemView);
             this.mContext = mContext;
         }
 
         public void setData(List<HomeBean.ResultBean.RecommendInfoBean> recommend_info) {
 
             //设置GridView的适配器
-            recommendGridViewAdapter = new RecommendGridViewAdapter(mContext,recommend_info);
+            recommendGridViewAdapter = new RecommendGridViewAdapter(mContext, recommend_info);
             gvRecommend.setAdapter(recommendGridViewAdapter);
 
             //设置点击事件
