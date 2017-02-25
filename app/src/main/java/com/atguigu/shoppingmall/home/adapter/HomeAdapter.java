@@ -2,6 +2,7 @@ package com.atguigu.shoppingmall.home.adapter;
 
 import android.content.Context;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.atguigu.shoppingmall.R;
@@ -26,6 +28,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import cn.iwgang.countdownview.CountdownView;
 
 /**
  * Created by 一名程序员 on 2017/2/23.
@@ -116,7 +119,7 @@ public class HomeAdapter extends RecyclerView.Adapter {
      */
     @Override
     public int getItemCount() {
-        return 3;
+        return 6;
     }
 
     /**
@@ -140,9 +143,16 @@ public class HomeAdapter extends RecyclerView.Adapter {
 
         } else if (viewType == SECKILL) {
 
+            return new SeckillViewHolder(mContext, inflater.inflate(R.layout.seckill_item, null));
+
         } else if (viewType == RECOMMEND) {
 
+
+            return new RecommendViewHolder(mContext, inflater.inflate(R.layout.recommend_item, null));
+
         } else if (viewType == HOT) {
+
+            return new HotViewHolder(mContext,inflater.inflate(R.layout.hot_item,null));
 
         }
         return null;
@@ -168,6 +178,101 @@ public class HomeAdapter extends RecyclerView.Adapter {
         } else if (getItemViewType(position) == ACT) {
             ActViewHolder actViewHolder = (ActViewHolder) holder;
             actViewHolder.setData(result.getAct_info());
+        } else if (getItemViewType(position) == SECKILL) {
+            SeckillViewHolder seckillViewHolder = (SeckillViewHolder) holder;
+            seckillViewHolder.setData(result.getSeckill_info());
+        } else if (getItemViewType(position) == RECOMMEND) {
+            RecommendViewHolder recommendViewHolder = (RecommendViewHolder) holder;
+            recommendViewHolder.setData(result.getRecommend_info());
+        }else if(getItemViewType(position) == HOT) {
+            HotViewHolder hotViewHolder = (HotViewHolder) holder;
+            hotViewHolder.setData(result.getHot_info());
+        }
+    }
+
+    class HotViewHolder extends RecyclerView.ViewHolder{
+
+        public HotViewHolder(Context mContext, View itemView) {
+            super(itemView);
+        }
+
+        public void setData(List<HomeBean.ResultBean.HotInfoBean> hot_info) {
+
+        }
+    }
+
+    class RecommendViewHolder extends RecyclerView.ViewHolder {
+
+        private final Context mContext;
+        @BindView(R.id.tv_more_recommend)
+        TextView tvMoreRecommend;
+        @BindView(R.id.gv_recommend)
+        GridView gvRecommend;
+
+        private RecommendGridViewAdapter recommendGridViewAdapter;
+
+        public RecommendViewHolder(Context mContext, View itemView) {
+            super(itemView);
+            ButterKnife.bind(this,itemView);
+            this.mContext = mContext;
+        }
+
+        public void setData(List<HomeBean.ResultBean.RecommendInfoBean> recommend_info) {
+
+            //设置GridView的适配器
+            recommendGridViewAdapter = new RecommendGridViewAdapter(mContext,recommend_info);
+            gvRecommend.setAdapter(recommendGridViewAdapter);
+
+            //设置点击事件
+            gvRecommend.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    Toast.makeText(mContext, "position" + position, Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    }
+
+    class SeckillViewHolder extends RecyclerView.ViewHolder {
+
+        private final Context mContext;
+        @BindView(R.id.countDownView)
+        CountdownView countDownView;
+        @BindView(R.id.tv_more_seckill)
+        TextView tvMoreSeckill;
+        @BindView(R.id.rv_seckill)
+        RecyclerView rvSeckill;
+
+        private SeckillRecyclerViewAdapter seckillRecyclerViewAdapter;
+
+        public SeckillViewHolder(Context mContext, View itemView) {
+            super(itemView);
+            ButterKnife.bind(this, itemView);
+            this.mContext = mContext;
+        }
+
+        public void setData(HomeBean.ResultBean.SeckillInfoBean seckill_info) {
+
+            //设置RecyclerView的适配器
+            seckillRecyclerViewAdapter = new SeckillRecyclerViewAdapter(mContext, seckill_info);
+            rvSeckill.setAdapter(seckillRecyclerViewAdapter);
+
+            //设置布局管理器
+            rvSeckill.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.HORIZONTAL, false));
+
+            //设置点击事件
+            seckillRecyclerViewAdapter.setOnItemClickListener(new SeckillRecyclerViewAdapter.OnItemClickListener() {
+                @Override
+                public void onItemClick(View v, int position) {
+                    Toast.makeText(mContext, "position==" + position, Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            //设置秒杀时间
+            countDownView.setTag("text1");
+            long duration = Long.parseLong(seckill_info.getEnd_time()) - Long.parseLong(seckill_info.getStart_time());
+            countDownView.start(duration);
+
         }
     }
 
@@ -181,14 +286,14 @@ public class HomeAdapter extends RecyclerView.Adapter {
 
         public ActViewHolder(Context mContext, View itemView) {
             super(itemView);
-            ButterKnife.bind(this,itemView);
+            ButterKnife.bind(this, itemView);
             this.mContext = mContext;
         }
 
         public void setData(List<HomeBean.ResultBean.ActInfoBean> act_info) {
 
             //设置适配器
-            viewPagerAdapter = new ViewPagerAdapter(mContext,act_info);
+            viewPagerAdapter = new ViewPagerAdapter(mContext, act_info);
 
             //viewpager美化
             viewPager.setPageMargin(20);//设置page间间距，自行根据需求设置
@@ -196,7 +301,7 @@ public class HomeAdapter extends RecyclerView.Adapter {
 
             viewPager.setAdapter(viewPagerAdapter);
 
-            viewPager.setPageTransformer(true,new RotateYTransformer());
+            viewPager.setPageTransformer(true, new RotateYTransformer());
 
             //设置点击事件
             viewPagerAdapter.setOnItemClickListener(new ViewPagerAdapter.OnItemClickListener() {
