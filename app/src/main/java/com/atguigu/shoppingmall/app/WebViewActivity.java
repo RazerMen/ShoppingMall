@@ -4,6 +4,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.webkit.JavascriptInterface;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -85,7 +86,18 @@ public class WebViewActivity extends AppCompatActivity {
                 return true;
             }
         });
+
+        webview.addJavascriptInterface(new MyJavascriptInterface(),"cyc");
+
         webview.loadUrl(Constants.BASE_URL_IMAGE + webViewBean.getUrl());
+    }
+
+    class MyJavascriptInterface{
+
+        @JavascriptInterface
+        public void jumpForAndroid(String data){
+            Toast.makeText(WebViewActivity.this, "data==" + data, Toast.LENGTH_SHORT).show();
+        }
     }
 
     @OnClick({R.id.ib_back, R.id.ib_more})
