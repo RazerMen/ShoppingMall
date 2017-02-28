@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.atguigu.shoppingmall.R;
 import com.atguigu.shoppingmall.home.bean.GoodsBean;
+import com.atguigu.shoppingmall.shoppingcart.utils.CartStorage;
 import com.atguigu.shoppingmall.shoppingcart.view.AddSubView;
 import com.atguigu.shoppingmall.utils.Constants;
 import com.bumptech.glide.Glide;
@@ -133,10 +134,15 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
         }
     }
 
-    public void checkAll_none(boolean isChecked){
-        if(list != null && list.size() >0) {
-            for(int i = 0; i < list.size(); i++) {
-              GoodsBean goodsBean = list.get(i);
+    /**
+     * 全选和反选
+     *
+     * @param isChecked
+     */
+    public void checkAll_none(boolean isChecked) {
+        if (list != null && list.size() > 0) {
+            for (int i = 0; i < list.size(); i++) {
+                GoodsBean goodsBean = list.get(i);
                 //设置是否勾选状态
                 goodsBean.setChecked(isChecked);
                 checkboxAll.setChecked(isChecked);
@@ -147,6 +153,25 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
             }
         }
     }
+
+    public void deleteData() {
+        if (list != null && list.size() > 0) {
+            for (int i = 0; i < list.size(); i++) {
+                GoodsBean goodsBean = list.get(i);
+                if (goodsBean.isChecked()) {
+                    //1、从内存中删除
+                    list.remove(goodsBean);
+
+                    CartStorage.getInstance(mContext).deletData(goodsBean);
+                    //刷新数据
+                    notifyItemRemoved(i);
+
+                    i--;
+                }
+            }
+        }
+    }
+
 
     class ViewHolder extends RecyclerView.ViewHolder {
 
