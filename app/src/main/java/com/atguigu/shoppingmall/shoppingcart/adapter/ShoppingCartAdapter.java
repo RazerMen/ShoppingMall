@@ -44,7 +44,7 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
 
     }
 
-    private void showTotalPrice() {
+    public void showTotalPrice() {
         //显示总价格
         tvShopcartTotal.setText("合计：" + getTotalPrice());
     }
@@ -105,6 +105,34 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
         return list.size();
     }
 
+    /**
+     * 校验是否全选
+     */
+    public void checkAll() {
+        if (list != null && list.size() > 0) {
+            int number = 0;
+            for (int i = 0; i < list.size(); i++) {
+                GoodsBean goodsBean = list.get(i);
+                if (!goodsBean.isChecked()) {
+                    //只要有一个不勾选
+                    checkboxAll.setChecked(false);
+                    checkboxDeleteAll.setChecked(false);
+                } else {
+                    //勾选
+                    number++;
+                }
+            }
+            if (list.size() == number) {
+                checkboxAll.setChecked(true);
+                checkboxDeleteAll.setChecked(true);
+            }
+        } else {
+            //没有数据
+            checkboxAll.setChecked(false);
+            checkboxDeleteAll.setChecked(false);
+        }
+    }
+
     class ViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.cb_gov)
@@ -121,6 +149,25 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
         ViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (itemClickListener != null) {
+                        itemClickListener.OnItemClickListener(v, getLayoutPosition());
+                    }
+                }
+            });
         }
+    }
+
+    public interface OnItemClickListener {
+        public void OnItemClickListener(View view, int position);
+    }
+
+    private OnItemClickListener itemClickListener;
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.itemClickListener = listener;
     }
 }
