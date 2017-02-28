@@ -27,7 +27,7 @@ import com.youth.banner.Banner;
 import com.youth.banner.listener.OnBannerListener;
 import com.youth.banner.loader.ImageLoader;
 import com.youth.banner.transformer.BackgroundToForegroundTransformer;
-import com.zhy.magicviewpager.transformer.RotateYTransformer;
+import com.youth.banner.transformer.RotateDownTransformer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -372,7 +372,7 @@ public class HomeAdapter extends RecyclerView.Adapter {
 
             viewPager.setAdapter(viewPagerAdapter);
 
-            viewPager.setPageTransformer(true, new RotateYTransformer());
+            viewPager.setPageTransformer(true, new RotateDownTransformer());
 
             //设置点击事件
             viewPagerAdapter.setOnItemClickListener(new ViewPagerAdapter.OnItemClickListener() {

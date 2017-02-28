@@ -55,7 +55,7 @@ public class CartStorage {
      *
      * @return
      */
-    private List<GoodsBean> getAllData() {
+    public List<GoodsBean> getAllData() {
         return getLocalData();
     }
 
@@ -95,5 +95,74 @@ public class CartStorage {
         }
 
         return instace;
+    }
+
+    /**
+     * 保存到本地
+     */
+    private void saveLocal() {
+        //1.把sparseArray转成List
+        List<GoodsBean> goodsBeanList = sparseArrayToList();
+        //2.使用Gson把List转json的String类型数据
+        String saveJson = new Gson().toJson(goodsBeanList);
+        //3.使用CacheUtils缓存数据
+        CacheUtils.setString(mContext, JSON_CART, saveJson);
+    }
+
+    /**
+     * 把sparseArray转成List
+     *
+     * @return
+     */
+    private List<GoodsBean> sparseArrayToList() {
+        //列表数据
+        List<GoodsBean> goodsBeanList = new ArrayList<>();
+        for (int i = 0; i < sparseArray.size(); i++) {
+            GoodsBean goodsBean = sparseArray.valueAt(i);
+            goodsBeanList.add(goodsBean);
+        }
+        return goodsBeanList;
+    }
+
+    /**
+     * 添加数据
+     *
+     * @param goodsBean
+     */
+    public void addData(GoodsBean goodsBean) {
+        //1.数据添加到sparseArray
+        GoodsBean tempGoodsBean = sparseArray.get(Integer.parseInt(goodsBean.getProduct_id()));
+        //已经保存过
+        if (tempGoodsBean != null) {
+            tempGoodsBean.setNumber(tempGoodsBean.getNumber() + goodsBean.getNumber());
+        } else {
+            //没有添加过
+            tempGoodsBean = goodsBean;
+        }
+        //添加到集合中
+        sparseArray.put(Integer.parseInt(tempGoodsBean.getProduct_id()), tempGoodsBean);
+        //2.保存到本地
+        saveLocal();
+    }
+
+    /**
+     * 删除数据
+     *
+     * @param goodsBean
+     */
+    public void deletData(GoodsBean goodsBean) {
+        //删除数据
+        sparseArray.delete(Integer.parseInt(goodsBean.getProduct_id()));
+
+        //保存到本地
+        saveLocal();
+    }
+
+    public void updateData(GoodsBean goodsBean) {
+        //修改数据
+        sparseArray.put(Integer.parseInt(goodsBean.getProduct_id()), goodsBean);
+
+        //保存到本地
+        saveLocal();
     }
 }
