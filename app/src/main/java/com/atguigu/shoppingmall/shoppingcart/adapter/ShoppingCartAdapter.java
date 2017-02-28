@@ -29,10 +29,42 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
 
     private final Context mContext;
     private final List<GoodsBean> list;
+    private final TextView tvShopcartTotal;
+    private final CheckBox checkboxAll;
+    private final CheckBox checkboxDeleteAll;
 
-    public ShoppingCartAdapter(Context mContext, List<GoodsBean> list) {
+    public ShoppingCartAdapter(Context mContext, List<GoodsBean> list, TextView tvShopcartTotal, CheckBox checkboxAll, CheckBox checkboxDeleteAll) {
         this.mContext = mContext;
         this.list = list;
+        this.tvShopcartTotal = tvShopcartTotal;
+        this.checkboxAll = checkboxAll;
+        this.checkboxDeleteAll = checkboxDeleteAll;
+
+        showTotalPrice();
+
+    }
+
+    private void showTotalPrice() {
+        //显示总价格
+        tvShopcartTotal.setText("合计：" + getTotalPrice());
+    }
+
+    /**
+     * 返回总价格
+     *
+     * @return
+     */
+    private double getTotalPrice() {
+        double totalPrice = 0;
+        if (list != null && list.size() > 0) {
+            for (int i = 0; i < list.size(); i++) {
+                GoodsBean goodsBean = list.get(i);
+                if (goodsBean.isChecked()) {
+                    totalPrice += Double.parseDouble(goodsBean.getCover_price()) * goodsBean.getNumber();
+                }
+            }
+        }
+        return totalPrice;
     }
 
     /**
@@ -53,7 +85,7 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
         //先得到数据
         GoodsBean goodsBean = list.get(position);
         //绑定数据
-//        holder.cbGov.setChecked(goodsBean.isChecked());
+        holder.cbGov.setChecked(goodsBean.isChecked());
         //图片
         Glide.with(mContext).load(Constants.BASE_URL_IMAGE + goodsBean.getFigure()).into(holder.ivGov);
         //设置名称
@@ -65,7 +97,6 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
         holder.addSubView.setMinValue(1);
         //设置库存-----来自服务器
         holder.addSubView.setMaxValue(100);
-
 
     }
 
