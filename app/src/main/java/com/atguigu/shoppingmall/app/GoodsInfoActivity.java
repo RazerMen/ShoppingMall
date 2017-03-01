@@ -166,7 +166,8 @@ public class GoodsInfoActivity extends AppCompatActivity {
                 break;
 
             case R.id.tv_good_info_callcenter:
-                Toast.makeText(this, "客服中心", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(this, "客服中心", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(GoodsInfoActivity.this, CallCenterActivity.class));
                 break;
 
             case R.id.tv_good_info_collection:
