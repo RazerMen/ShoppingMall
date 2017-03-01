@@ -50,6 +50,8 @@ public class HomeFragment extends BaseFragment {
     public View initView() {
         View view = View.inflate(mContext, R.layout.fragment_home, null);
         ButterKnife.bind(this, view);
+
+
         return view;
     }
 
