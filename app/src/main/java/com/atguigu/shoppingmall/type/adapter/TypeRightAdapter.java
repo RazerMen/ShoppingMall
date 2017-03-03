@@ -72,13 +72,15 @@ public class TypeRightAdapter extends RecyclerView.Adapter {
 
     @Override
     public int getItemCount() {
-        return 1;
+        return 1 + child.size();
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (viewType == HOT) {
             return new HotViewHodler(inflater.inflate(R.layout.item_hot_right, null));
+        } else if (viewType == COMMON) {
+            return new CommonViewHolder(inflater.inflate(R.layout.item_common_right, null));
         }
         return null;
     }
@@ -88,6 +90,39 @@ public class TypeRightAdapter extends RecyclerView.Adapter {
         if (getItemViewType(position) == HOT) {
             HotViewHodler hotViewHodler = (HotViewHodler) holder;
             hotViewHodler.setData(hot_product_list);
+        } else if (getItemViewType(position) == COMMON) {
+            CommonViewHolder commonViewHolder = (CommonViewHolder) holder;
+            int realPosition = position - 1;
+            commonViewHolder.setData(child.get(realPosition));
+        }
+    }
+
+    class CommonViewHolder extends RecyclerView.ViewHolder {
+
+        @BindView(R.id.iv_ordinary_right)
+        ImageView ivOrdinaryRight;
+        @BindView(R.id.tv_ordinary_right)
+        TextView tvOrdinaryRight;
+        @BindView(R.id.ll_root)
+        LinearLayout llRoot;
+
+        public CommonViewHolder(View itemView) {
+            super(itemView);
+            ButterKnife.bind(this, itemView);
+        }
+
+        public void setData(final TypeBean.ResultBean.ChildBean childBean) {
+            //请求图片
+            Glide.with(mContext).load(Constants.BASE_URL_IMAGE + childBean.getPic()).into(ivOrdinaryRight);
+            //设置文本
+            tvOrdinaryRight.setText(childBean.getName());
+
+            llRoot.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(mContext, "" + childBean.getName(), Toast.LENGTH_SHORT).show();
+                }
+            });
         }
     }
 
