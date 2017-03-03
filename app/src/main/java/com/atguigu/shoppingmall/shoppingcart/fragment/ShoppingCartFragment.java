@@ -351,7 +351,7 @@ public class ShoppingCartFragment extends BaseFragment {
             return;
         }
         //生成订单信息-在客户端或者服务器
-        String orderInfo = getOrderInfo("硅谷内裤", "好棒好棒的内裤", adapter.getTotalPrice() + "");
+        String orderInfo = getOrderInfo("硅谷商城", "硅谷的商城不咋样", adapter.getTotalPrice() + "");
 
         /**
          * 特别注意，这里的签名逻辑需要放在服务端，切勿将私钥泄露在代码中！

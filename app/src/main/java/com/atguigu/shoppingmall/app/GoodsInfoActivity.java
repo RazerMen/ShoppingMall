@@ -248,7 +248,7 @@ public class GoodsInfoActivity extends AppCompatActivity {
         tv_goodinfo_price.setText(goodsBean.getCover_price());
 
         // 设置最大值和当前值
-        nas_goodinfo_num.setMaxValue(8);
+        nas_goodinfo_num.setMaxValue(10);
         nas_goodinfo_num.setValue(1);
 
 

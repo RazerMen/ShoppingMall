@@ -19,6 +19,7 @@
         android:id="@+id/ll_main_scan"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
+        android:layout_marginLeft="8dp"
         android:gravity="center"
         android:orientation="vertical">
 
@@ -26,7 +27,7 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:src="@drawable/scan"
-            android:tint="@android:color/white" />
+            android:tint="@android:color/white"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -35,7 +36,7 @@
             android:text="扫一扫"
             android:textColor="@android:color/white"
             android:textSize="12sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"/>
     </LinearLayout>
 
 
