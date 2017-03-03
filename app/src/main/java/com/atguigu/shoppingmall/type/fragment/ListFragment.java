@@ -1,5 +1,6 @@
 package com.atguigu.shoppingmall.type.fragment;
 
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
@@ -10,10 +11,13 @@ import com.alibaba.fastjson.JSON;
 import com.atguigu.shoppingmall.R;
 import com.atguigu.shoppingmall.base.BaseFragment;
 import com.atguigu.shoppingmall.type.adapter.TypeLeftAdapter;
+import com.atguigu.shoppingmall.type.adapter.TypeRightAdapter;
 import com.atguigu.shoppingmall.type.bean.TypeBean;
 import com.atguigu.shoppingmall.utils.Constants;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -44,6 +48,8 @@ public class ListFragment extends BaseFragment {
 
     private TypeLeftAdapter leftAdapter;
 
+    private TypeRightAdapter rightAdapter;
+
     @Override
     public View initView() {
         View view = View.inflate(mContext, R.layout.fragment_list, null);
@@ -70,20 +76,42 @@ public class ListFragment extends BaseFragment {
 
             @Override
             public void onResponse(String response, int id) {
-                Log.e("TAG", "联网成功==" );
+                Log.e("TAG", "联网成功==");
                 processData(response);
             }
         });
     }
 
     private void processData(String response) {
-        TypeBean typeBean = JSON.parseObject(response,TypeBean.class);
+        TypeBean typeBean = JSON.parseObject(response, TypeBean.class);
         Log.e("TAG", "" + typeBean.getResult().get(0).getName());
+
+        List<TypeBean.ResultBean> result = typeBean.getResult();
+        if (result != null && result.size() > 0) {
+
+            //设置RecyclerView的适配器
+            rightAdapter = new TypeRightAdapter(mContext, result);
+            rvRight.setAdapter(rightAdapter);
+
+            //设置布局管理器
+            GridLayoutManager manager = new GridLayoutManager(mContext, 3);
+            manager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+                @Override
+                public int getSpanSize(int position) {
+                    if (position == 0) {
+                        return 3;
+                    } else {
+                        return 1;
+                    }
+                }
+            });
+            rvRight.setLayoutManager(manager);
+        }
     }
 
     private void initAdapter() {
         //设置适配器
-        leftAdapter = new TypeLeftAdapter(mContext,titles);
+        leftAdapter = new TypeLeftAdapter(mContext, titles);
         lvLeft.setAdapter(leftAdapter);
         //设置item点击事件
         lvLeft.setOnItemClickListener(new AdapterView.OnItemClickListener() {
