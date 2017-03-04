@@ -15,22 +15,21 @@ public class Constants {
 //    public static String BASE_URL = "http://10.0.2.2:8080/atguigu";
 
     //公网
-    public static String BASE_URL = "http://182.92.5.3:8081/android/resources";
+//    public static String BASE_URL = "http://182.92.5.3:8081/android/resources";
 
     //自己的TOMCAT
-//    public static String BASE_URL = "http://192.168.1.37:8080/atguigu";
+    public static String BASE_URL = "http://192.168.1.37:8080/atguigu";
 
 
-    private static final String BASE_URL_JSON = BASE_URL+"/json/";
+    private static final String BASE_URL_JSON = BASE_URL + "/json/";
     /**
      * 主页面的路径
      */
-    public static String HOME_URL  = BASE_URL_JSON+"HOME_URL.json";
+    public static String HOME_URL = BASE_URL_JSON + "HOME_URL.json";
     /**
      * 图片的基本路径
      */
-    public static String BASE_URL_IMAGE  = BASE_URL+"/img";
-
+    public static String BASE_URL_IMAGE = BASE_URL + "/img";
 
 
     //小裙子
@@ -52,22 +51,18 @@ public class Constants {
     //办公文具
     public static final String STATIONERY_URL = BASE_URL_JSON + "STATIONERY_URL.json";
     //数码周边
-    public static final String DIGIT_URL = BASE_URL_JSON +  "DIGIT_URL.json";
+    public static final String DIGIT_URL = BASE_URL_JSON + "DIGIT_URL.json";
     //游戏专区
     public static final String GAME_URL = BASE_URL_JSON + "GAME_URL.json";
-
 
 
     //分类Fragment里面的标签Fragment页面数据
     public static final String TAG_URL = BASE_URL_JSON + "TAG_URL.json";
 
 
-
     //发现页面-的-新特路径
     public static final String NEW_POST_URL = BASE_URL_JSON + "NEW_POST_URL.json";
     public static final String HOT_POST_URL = BASE_URL_JSON + "HOT_POST_URL.json";
-
-
 
 
     //服饰

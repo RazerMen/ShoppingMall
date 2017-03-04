@@ -77,13 +77,14 @@ public class SeckillRecyclerViewAdapter extends RecyclerView.Adapter<SeckillRecy
             });
         }
     }
+
+    private OnItemClickListener listener;
     /**
      * 点击item接口
      */
     public interface OnItemClickListener{
-        public void onItemClick(View v,int position);
+        void onItemClick(View v,int position);
     }
-    private OnItemClickListener listener;
 
     /**
      * 设置item的点击事件

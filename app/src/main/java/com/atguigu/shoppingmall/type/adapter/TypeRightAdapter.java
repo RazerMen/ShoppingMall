@@ -52,6 +52,7 @@ public class TypeRightAdapter extends RecyclerView.Adapter {
     private int currentType = HOT;
 
     private LayoutInflater inflater;
+    private int position;
 
     public TypeRightAdapter(Context mContext, List<TypeBean.ResultBean> result) {
         this.mContext = mContext;
@@ -125,7 +126,6 @@ public class TypeRightAdapter extends RecyclerView.Adapter {
                 @Override
                 public void onClick(View v) {
                     Toast.makeText(mContext, "" + childBean.getName(), Toast.LENGTH_SHORT).show();
-
                 }
             });
         }
@@ -148,7 +148,7 @@ public class TypeRightAdapter extends RecyclerView.Adapter {
 
                 TypeBean.ResultBean.HotProductListBean bean = hot_product_list.get(i);
 
-                //外面的线性布局
+//              外面的线性布局
                 LinearLayout layout = new LinearLayout(mContext);
                 final LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ActionBar.LayoutParams.WRAP_CONTENT, -2);
                 params.setMargins((DensityUtil.dip2px(mContext, 5)), 0, DensityUtil.dip2px(mContext, 5), DensityUtil.dip2px(mContext, 20));
@@ -205,7 +205,7 @@ public class TypeRightAdapter extends RecyclerView.Adapter {
                         goodsBean.setProduct_id(product_id);
 
                         Intent intent = new Intent(mContext, GoodsInfoActivity.class);
-                        intent.putExtra(HomeAdapter.GOODS_BEAN,goodsBean);
+                        intent.putExtra(HomeAdapter.GOODS_BEAN, goodsBean);
                         mContext.startActivity(intent);
                     }
                 });
