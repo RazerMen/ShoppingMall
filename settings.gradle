@@ -1,1 +1,1 @@
-include ':app', ':opendanmaku', ':OpenDanmaku_master'
+include ':app'
