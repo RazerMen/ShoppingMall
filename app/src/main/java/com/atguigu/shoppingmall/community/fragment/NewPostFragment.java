@@ -3,15 +3,17 @@ package com.atguigu.shoppingmall.community.fragment;
 import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.atguigu.shoppingmall.R;
 import com.atguigu.shoppingmall.base.BaseFragment;
+import com.atguigu.shoppingmall.community.adapter.NewPostListViewAdapter;
 import com.atguigu.shoppingmall.community.bean.NewPostBean;
 import com.atguigu.shoppingmall.utils.Constants;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -28,6 +30,8 @@ public class NewPostFragment extends BaseFragment {
 
     @BindView(R.id.lv_new_post)
     ListView lvNewPost;
+
+    private NewPostListViewAdapter adapter;
 
     @Override
     public View initView() {
@@ -60,6 +64,12 @@ public class NewPostFragment extends BaseFragment {
 
     private void processData(String json) {
         NewPostBean newPostBean = JSON.parseObject(json, NewPostBean.class);
-        Toast.makeText(mContext, "" + newPostBean.getResult().get(0).getSaying(), Toast.LENGTH_SHORT).show();
+//        Toast.makeText(mContext, "" + newPostBean.getResult().get(0).getSaying(), Toast.LENGTH_SHORT).show();
+        List<NewPostBean.ResultBean> result = newPostBean.getResult();
+        if(result != null && result.size() > 0) {
+            //设置适配器
+            adapter = new NewPostListViewAdapter(mContext,result);
+            lvNewPost.setAdapter(adapter);
+        }
     }
 }
