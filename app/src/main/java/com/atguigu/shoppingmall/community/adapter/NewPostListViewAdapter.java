@@ -13,7 +13,12 @@ import com.atguigu.shoppingmall.R;
 import com.atguigu.shoppingmall.community.bean.NewPostBean;
 import com.atguigu.shoppingmall.utils.Constants;
 import com.bumptech.glide.Glide;
+import com.opendanmaku.DanmakuItem;
+import com.opendanmaku.DanmakuView;
+import com.opendanmaku.IDanmakuItem;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
@@ -73,12 +78,40 @@ public class NewPostListViewAdapter extends BaseAdapter {
         viewHolder.tvCommunitySaying.setText(resultBean.getSaying());
         viewHolder.tvCommunityLikes.setText(resultBean.getLikes());
         viewHolder.tvCommunityComments.setText(resultBean.getComments());
+//        viewHolder.tvCommunityAddtime.setText(resultBean.getAdd_time());
+
+        //显示弹幕
+        List<String> strings = resultBean.getComment_list();
+        if (strings != null && strings.size() > 0) {
+
+            //有弹幕的数据
+            List<IDanmakuItem> list = initItems(viewHolder.danmakuView, strings);
+
+            Collections.shuffle(list);
+
+            viewHolder.danmakuView.addItem(list, true);
+            viewHolder.danmakuView.show();
+            viewHolder.danmakuView.setVisibility(View.VISIBLE);
+
+        } else {
+            viewHolder.danmakuView.hide();
+            viewHolder.danmakuView.setVisibility(View.GONE);
+        }
 
 
         return convertView;
     }
 
-    class ViewHolder {
+    private List<IDanmakuItem> initItems(DanmakuView danmakuView, List<String> strings) {
+        List<IDanmakuItem> list = new ArrayList<>();
+        for (int i = 0; i < strings.size(); i++) {
+            IDanmakuItem item = new DanmakuItem(mContext, strings.get(i), danmakuView.getWidth());
+            list.add(item);
+        }
+        return list;
+    }
+
+    static class ViewHolder {
         @BindView(R.id.tv_community_username)
         TextView tvCommunityUsername;
         @BindView(R.id.tv_community_addtime)
@@ -95,9 +128,13 @@ public class NewPostListViewAdapter extends BaseAdapter {
         TextView tvCommunityLikes;
         @BindView(R.id.tv_community_comments)
         TextView tvCommunityComments;
+        @BindView(R.id.danmakuView)
+        DanmakuView danmakuView;
 
         ViewHolder(View view) {
             ButterKnife.bind(this, view);
         }
     }
+
+
 }
