@@ -84,5 +84,17 @@ public class Constants {
     //首饰厂
     public static final String SHOUSHI_STORE = BASE_URL_JSON + "SHOUSHI_STORE.json";
 
+//    //搜索地址
+//
+//
+//    public static final String HOT_SEARCH = BASE_URL_JSON+"HOT_SEARCH.json";
+//
+//    public static final String DB_NAME = "note";
+//
+//    //登录地址
+//    public static final String LOGIN = "http://182.92.5.3:8081/android/user/login";
+//    //注册地址
+//    public static final String REGIST = "http://182.92.5.3:8081/android/user/reg";
+
 }
 

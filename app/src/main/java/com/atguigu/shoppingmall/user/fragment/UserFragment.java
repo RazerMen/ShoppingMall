@@ -1,5 +1,6 @@
 package com.atguigu.shoppingmall.user.fragment;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -9,11 +10,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.atguigu.shoppingmall.R;
+import com.atguigu.shoppingmall.app.LoginActivity;
 import com.atguigu.shoppingmall.base.BaseFragment;
 import com.hankkin.gradationscroll.GradationScrollView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * Created by 一名程序员 on 2017/2/22.
@@ -120,5 +123,11 @@ public class UserFragment extends BaseFragment implements GradationScrollView.Sc
         } else {    //滑动到banner下面设置普通颜色
             tvUsercenter.setBackgroundColor(Color.argb((int) 255, 255, 0, 0));
         }
+    }
+
+    @OnClick(R.id.tv_username)
+    public void onClick() {
+        Intent intent = new Intent(mContext, LoginActivity.class);
+        startActivity(intent);
     }
 }
