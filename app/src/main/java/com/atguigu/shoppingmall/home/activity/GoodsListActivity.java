@@ -25,6 +25,7 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
 import com.atguigu.shoppingmall.R;
 import com.atguigu.shoppingmall.app.GoodsInfoActivity;
+import com.atguigu.shoppingmall.home.adapter.ExpandableListViewAdapter;
 import com.atguigu.shoppingmall.home.adapter.GoodsListAdapter;
 import com.atguigu.shoppingmall.home.adapter.HomeAdapter;
 import com.atguigu.shoppingmall.home.bean.GoodsBean;
@@ -34,6 +35,7 @@ import com.atguigu.shoppingmall.utils.Constants;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.StringCallback;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -211,6 +213,18 @@ public class GoodsListActivity extends AppCompatActivity {
 
     private int click_count;
 
+    /**
+     * 父层的数据
+     */
+    private ArrayList<String> group;
+
+    /**
+     * 孩子的数据
+     */
+    private ArrayList<List<String>> child;
+
+    private ExpandableListViewAdapter expandableListViewAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -271,6 +285,9 @@ public class GoodsListActivity extends AppCompatActivity {
         llSelectRoot.setVisibility(View.GONE);
         llPriceRoot.setVisibility(View.GONE);
         llThemeRoot.setVisibility(View.GONE);
+
+        //初始化ExpandableListView
+        initExpandableListView();
     }
 
     private void getDataFromNet(String url) {
@@ -468,5 +485,59 @@ public class GoodsListActivity extends AppCompatActivity {
 
                 break;
         }
+    }
+
+    private void initExpandableListView() {
+
+        //创建集合
+        group = new ArrayList<>();
+        child = new ArrayList<>();
+
+        //添加数据
+        addInfo("全部", new String[]{});
+        addInfo("上衣", new String[]{"古风", "和风", "lolita", "日常"});
+        addInfo("下装", new String[]{"日常", "泳衣", "汉风", "lolita", "创意T恤"});
+        addInfo("外套", new String[]{"汉风", "古风", "lolita", "胖次", "南瓜裤", "日常"});
+
+        //设置适配器
+        expandableListViewAdapter = new ExpandableListViewAdapter(this, group, child);
+        expandableListView.setAdapter(expandableListViewAdapter);
+
+        //设置孩子的点击事件
+        expandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
+            @Override
+            public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
+                //把位置传到适配器中
+                expandableListViewAdapter.isChildSelectable(groupPosition, childPosition);
+                //刷新
+                expandableListViewAdapter.notifyDataSetChanged();
+                //返回true
+                return true;
+            }
+        });
+
+        //控制如果列表没有孩子菜单不展开的效果
+        expandableListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+            @Override
+            public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
+                // isEmpty没有
+                if (child.get(groupPosition).isEmpty()) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        });
+    }
+
+    private void addInfo(String father, String[] datas) {
+
+        group.add(father);//下装
+        //下装--孩子的数据{日常", "泳衣", "汉风", "lolita", "创意T恤}
+        List<String> list = new ArrayList<String>();
+        for (int i = 0; i < datas.length; i++) {
+            list.add(datas[i]);
+        }
+        child.add(list);
     }
 }
