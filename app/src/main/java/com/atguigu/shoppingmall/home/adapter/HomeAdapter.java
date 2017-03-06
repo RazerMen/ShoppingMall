@@ -2,6 +2,7 @@ package com.atguigu.shoppingmall.home.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -293,6 +294,8 @@ public class HomeAdapter extends RecyclerView.Adapter {
 
     class SeckillViewHolder extends RecyclerView.ViewHolder {
 
+        private boolean isFrist = false;
+
         private final Context mContext;
         @BindView(R.id.countDownView)
         CountdownView countDownView;
@@ -303,6 +306,32 @@ public class HomeAdapter extends RecyclerView.Adapter {
 
         private SeckillRecyclerViewAdapter seckillRecyclerViewAdapter;
 
+        Handler handler = new Handler();
+        HomeBean.ResultBean.SeckillInfoBean seckillInfoBean;
+
+        //开始刷新
+        void startRefreshTime() {
+            handler.postDelayed(mRefreshTimeRunnable, 10);
+        }
+
+        private Runnable mRefreshTimeRunnable = new Runnable() {
+            @Override
+            public void run() {
+                //得到当前的时间
+                long currentTime = System.currentTimeMillis();
+                if (currentTime >= Long.parseLong(seckillInfoBean.getEnd_time())) {
+                    //倒计时结束
+                    handler.removeCallbacksAndMessages(null);
+                } else {
+                    //更新时间
+                    countDownView.updateShow(Long.parseLong(seckillInfoBean.getEnd_time()) - currentTime);
+
+                    //每隔1000秒更新一次
+                    handler.postDelayed(mRefreshTimeRunnable, 1000);
+                }
+            }
+        };
+
         public SeckillViewHolder(Context mContext, View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
@@ -310,6 +339,20 @@ public class HomeAdapter extends RecyclerView.Adapter {
         }
 
         public void setData(final HomeBean.ResultBean.SeckillInfoBean seckill_info) {
+
+            this.seckillInfoBean = seckill_info;
+            if (!isFrist) {
+                isFrist = true;
+                //计算倒计时持续的时间
+                long totalTime = Long.parseLong(seckillInfoBean.getEnd_time()) - Long.parseLong(seckillInfoBean.getStart_time());
+
+                // 校对倒计时
+                long curTime = System.currentTimeMillis();
+                //重新设置结束数据时间
+                seckillInfoBean.setEnd_time((curTime + totalTime + ""));
+                //开始刷新
+                startRefreshTime();
+            }
 
             //设置RecyclerView的适配器
             seckillRecyclerViewAdapter = new SeckillRecyclerViewAdapter(mContext, seckill_info);
