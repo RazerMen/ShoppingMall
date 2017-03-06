@@ -117,11 +117,9 @@
     </LinearLayout>
 
 
-
     <!--侧滑菜单4个布局-->
 
-    <!--侧滑菜单-->
-    <!--<RelativeLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="right"
@@ -134,10 +132,7 @@
         <include layout="@layout/recommend_theme_layout" />
 
         <include layout="@layout/drawer_type_layout" />
-    </RelativeLayout>-->
-
-
-
+    </RelativeLayout>
 
 </android.support.v4.widget.DrawerLayout>
 
